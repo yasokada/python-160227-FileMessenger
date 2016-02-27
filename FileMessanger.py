@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 '''
+v0.3 2016 Feb. 27
+    - add while True and usb insert check
 v0.2 2016 Feb. 27
     - add msgr_filecopy()
 v0.1 2016 Feb. 27
@@ -9,21 +11,37 @@ v0.1 2016 Feb. 27
 
 import os.path
 import shutil
+import time
+import subprocess
 
 pizeropath="/home/pi/BYOP"
 usbpath="/media/BYOP"
 
-def msgr_filecopy(srcpath, dstpath):
-    print "myUpdate"
-    if os.path.isdir(usbpath)==False:
+def msgr_filecopy(srcdir, dstdir, filename):
+    if os.path.isdir(srcdir)==False:
         print "no file"
         return
+    srcpath = srcdir + "/" + filename
+    dstpath = dstdir + "/" + filename
     shutil.copyfile(srcpath, dstpath)    
 
-srcname=usbpath + "/" + "name.txt"
-dstname=pizeropath + "/" + "name.txt"
-print srcname
+chk1=False
+chk2=False
+chk3=False
+while True:
+    chk1 = chk2
+    chk2 = chk3
+    chk3 = os.path.isdir(usbpath)
+    if os.path.isdir(pizeropath) and os.path.isdir(usbpath):
+        if chk1==False and chk2==False and chk3==True:    
+            msgr_filecopy(usbpath, pizeropath, "name.txt")
+            msgr_filecopy(usbpath, pizeropath, "send.txt")
+            msgr_filecopy(pizeropath, usbpath, "rcvd.txt")    
+            #umount
+            cmd=["umount", usbpath]
+	    print cmd
+	    subprocess.Popen(cmd, bufsize=0)
+	    print "Copied"
 
-msgr_filecopy(srcname, dstname)
-
+    time.sleep(0.5) #second
     
