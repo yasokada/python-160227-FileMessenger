@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 '''
+v0.4 2016 Mar. 13
+	- project name was typo (FieMessenger)
 v0.3 2016 Feb. 27
     - add while True and usb insert check
 v0.2 2016 Feb. 27
